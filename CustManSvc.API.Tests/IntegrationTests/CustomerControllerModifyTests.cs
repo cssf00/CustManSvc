@@ -11,20 +11,21 @@ using CustManSvc.API.DataTransferObject;
 
 namespace CustManSvc.API.Tests
 {
-    public class ItemControllerTests : IClassFixture<InMemoryApplicationFactory<Startup>>
+    public class CustomerControllerModifyTests : IClassFixture<AppFactoryForModifyTests<CustManSvc.API.Startup>>
     {
-        private readonly InMemoryApplicationFactory<Startup> _factory;
+        private readonly AppFactoryForModifyTests<CustManSvc.API.Startup> _factory;
 
-        public ItemControllerTests(InMemoryApplicationFactory<Startup> factory)
+        public CustomerControllerModifyTests(AppFactoryForModifyTests<CustManSvc.API.Startup> factory)
         {
             _factory = factory;
         }
 
         [Fact]
-        public async Task Test_create_customer()
+        public async Task Test_create_delete_customer()
         {
             var client = _factory.CreateClient();
 
+            // Create new customer
             CustomerDTO dtoCust = new CustomerDTO {
                 ID = 0,
                 FirstName = "Peter",
@@ -32,45 +33,17 @@ namespace CustManSvc.API.Tests
                 DateOfBirth = "1995-05-21T00:00:00Z"
             };
             var requestContent = new StringContent(JsonSerializer.Serialize(dtoCust), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync($"/api/customers", requestContent);
+            var createResponse = await client.PostAsync($"/api/customers", requestContent);
 
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            // Prepopulated 3 customers, so the return ID should be 4
-            Assert.Equal("/api/customers/4", response.Headers.Location.AbsolutePath);
+            Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+            var createdCust = JsonSerializer.Deserialize<CustomerDTO>(await createResponse.Content.ReadAsStringAsync());
+            Assert.Equal("Sampson", createdCust.LastName);
 
-            var resultCust = JsonSerializer.Deserialize<CustomerDTO>(await response.Content.ReadAsStringAsync());
-            Assert.Equal(4, resultCust.ID);
-        }
-
-        [Fact]
-        public async Task Test_get_one_correct()
-        {
-            var client = _factory.CreateClient();
-
-            var response = await client.GetAsync($"/api/customers/1");
-            response.EnsureSuccessStatusCode();
-
-            string responseContent = await response.Content.ReadAsStringAsync();
-            var dtoCust = JsonSerializer.Deserialize<CustomerDTO>(responseContent);
-    
-            Assert.Equal(1, dtoCust.ID);
-            Assert.Equal("Sammy", dtoCust.FirstName);
-            Assert.Equal("Hosea", dtoCust.LastName);
-            Assert.Equal("2001-03-04T00:00:00Z", dtoCust.DateOfBirth);
-        }
-
-        [Fact]
-        public async Task Test_get_all()
-        {
-            var client = _factory.CreateClient();
-
-            var response = await client.GetAsync($"/api/customers");
-            response.EnsureSuccessStatusCode();
-
-            string responseContent = await response.Content.ReadAsStringAsync();
-            var dtoCusts = JsonSerializer.Deserialize<IEnumerable<CustomerDTO>>(responseContent);
-    
-            Assert.Equal(3, dtoCusts.Count());
+            // Delete the customer
+            var deleteResponse = await client.DeleteAsync($"/api/customers/4");
+            Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+            var deletedCust = JsonSerializer.Deserialize<CustomerDTO>(await deleteResponse.Content.ReadAsStringAsync());
+            Assert.Equal("Sampson", deletedCust.LastName);
         }
 
         [Fact]
@@ -89,12 +62,12 @@ namespace CustManSvc.API.Tests
             var putResponse = await client.PutAsync($"/api/customers/1", requestContent);
             Assert.Equal(HttpStatusCode.OK, putResponse.StatusCode);
 
+            // Get customer 1 to check
             var getResponse = await client.GetAsync($"/api/customers/1");
             Assert.Equal(HttpStatusCode.OK, putResponse.StatusCode);
 
             string getResponseContent = await getResponse.Content.ReadAsStringAsync();
             var updatedCust = JsonSerializer.Deserialize<CustomerDTO>(getResponseContent);
-    
             Assert.Equal(1, updatedCust.ID);
             Assert.Equal("Samantha", updatedCust.FirstName);
             Assert.Equal("Jackson", updatedCust.LastName);

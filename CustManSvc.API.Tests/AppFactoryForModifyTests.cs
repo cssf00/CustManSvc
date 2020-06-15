@@ -10,7 +10,7 @@ using CustManSvc.API.Service.Database;
 
 namespace CustManSvc.API.Tests
 {
-    public class InMemoryApplicationFactory<TStartup>
+    public class AppFactoryForModifyTests<TStartup>
         : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -27,8 +27,7 @@ namespace CustManSvc.API.Tests
 
                 services.AddDbContext<DatabaseContext>(options =>
                 {
-                    options.UseInMemoryDatabase(Guid.NewGuid().ToString());
-                    // options.UseInMemoryDatabase("TestDB");
+                    options.UseInMemoryDatabase("EmptyDB");
                 });
 
                 var sp = services.BuildServiceProvider();
@@ -39,14 +38,11 @@ namespace CustManSvc.API.Tests
                     var db = scopedServices.GetRequiredService<DatabaseContext>();
                     db.Database.EnsureCreated();
 
-                    var logger = scopedServices.GetRequiredService<ILogger<InMemoryApplicationFactory<TStartup>>>();
-                    try
-                    {
-                        // Seed the database with test data.
+                    var logger = scopedServices.GetRequiredService<ILogger<AppFactoryForReadOnlyTests<TStartup>>>();
+                    try {
                         TestHelper.PopulateTestData(db);
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex) {
                         logger.LogError(ex, "Error occurs when populating test data: {0}", ex.Message);
                     }
                 }
