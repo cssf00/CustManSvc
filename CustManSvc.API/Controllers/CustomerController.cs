@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using CustManSvc.Common;
-using CustManSvc.DataTransferObject;
-using CustManSvc.Service.Database;
+using CustManSvc.API.Common;
+using CustManSvc.API.DataTransferObject;
+using CustManSvc.API.Service.Database;
 
-namespace CustManSvc.Controllers
+namespace CustManSvc.API.Controllers
 {
     [ApiController]
     [Route("api/customers")]

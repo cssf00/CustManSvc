@@ -1,6 +1,6 @@
 using System;
 
-namespace CustManSvc.Service.Database
+namespace CustManSvc.API.Service.Database
 {
     public class RecordNotFoundException: Exception
     {

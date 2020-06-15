@@ -1,4 +1,4 @@
-namespace CustManSvc.Common
+namespace CustManSvc.API.Common
 {
     static class Constants
     {

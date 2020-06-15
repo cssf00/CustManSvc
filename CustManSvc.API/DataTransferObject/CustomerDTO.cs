@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using CustManSvc.Common;
+using CustManSvc.API.Common;
 
-namespace CustManSvc.DataTransferObject
+namespace CustManSvc.API.DataTransferObject
 {
     // Customer data transfer object, that is sent to or received from clients of the service
     public class CustomerDTO

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace CustManSvc.Service.Database
+namespace CustManSvc.API.Service.Database
 {
     public class DatabaseContext : DbContext
     {

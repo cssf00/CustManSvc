@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace CustManSvc.Service.Database
+namespace CustManSvc.API.Service.Database
 {
     // Provide database capabilities, implements IDatabaseClient
     public class DatabaseClient : IDatabaseClient

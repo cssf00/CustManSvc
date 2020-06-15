@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CustManSvc.Service.Database
+namespace CustManSvc.API.Service.Database
 {
     // Customer Database object
     public class Customer

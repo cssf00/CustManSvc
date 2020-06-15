@@ -1,6 +1,6 @@
 using System;
 
-namespace CustManSvc.Common
+namespace CustManSvc.API.Common
 {
     // User defined service error
     public class ServiceError

@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.ComponentModel.DataAnnotations;
 
-namespace CustManSvc.Common
+namespace CustManSvc.API.Common
 {
     public class DateFormatValidationAttribute : ValidationAttribute
     {
