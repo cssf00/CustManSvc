@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CustManSvc.Common;
-using CustManSvc.Service.DataTransferObject;
+using CustManSvc.DataTransferObject;
 using CustManSvc.Service.Database;
 
 namespace CustManSvc.Controllers
