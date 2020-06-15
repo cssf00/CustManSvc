@@ -10,6 +10,7 @@ using CustManSvc.API.Service.Database;
 
 namespace CustManSvc.API.Tests
 {
+    // App factory for tests that test get all, get by id, search apis
     public class AppFactoryForReadOnlyTests<TStartup>
         : WebApplicationFactory<TStartup> where TStartup : class
     {
@@ -27,7 +28,7 @@ namespace CustManSvc.API.Tests
 
                 services.AddDbContext<DatabaseContext>(options =>
                 {
-                    options.UseInMemoryDatabase("TestDB");
+                    options.UseInMemoryDatabase("TestReadOnlyDB");
                 });
 
                 var sp = services.BuildServiceProvider();

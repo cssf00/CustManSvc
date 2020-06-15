@@ -26,7 +26,12 @@ namespace CustManSvc.API.Controllers
             _dbClient = custDBClient;
         }
 
+        ///<summary>
+        ///  Get all customers
+        ///</summary>
+        /// <response code="200">OK, success</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<CustomerDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetAll()
         {
             var dbCusts = await _dbClient.GetAllCustomersAsync();
@@ -34,7 +39,14 @@ namespace CustManSvc.API.Controllers
             return dtoCusts;
         }
 
+        ///<summary>
+        ///  Get customers by ID
+        ///</summary>
+        /// <param name="custID">Customer ID</param>
+        /// <response code="200">OK, customer found</response>
+        /// <response code="404">Not Found</response> 
         [HttpGet("{custID}")]
+        [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CustomerDTO>> GetByID(int custID)
         {
@@ -47,17 +59,23 @@ namespace CustManSvc.API.Controllers
             return ConvertToDTO(dbCust);
         }
 
+        ///<summary>
+        ///  Adds a new customer
+        ///</summary>
+        /// <param name="customer">Customer object to add</param>
+        /// <response code="201">OK, customer created</response>
+        /// <response code="400">Bad Request</response> 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CustomerDTO>> Create(CustomerDTO reqCust)
+        public async Task<ActionResult<CustomerDTO>> Create(CustomerDTO customer)
         {
-            if (reqCust.ID > 0)
+            if (customer.ID > 0)
             {
-                return BadRequest(new ServiceError($"Customer ID must be zero on create: {reqCust.ID}"));
+                return BadRequest(new ServiceError($"Customer ID must be zero on create: {customer.ID}"));
             }
 
-            Customer dbCust = ConvertToDB(reqCust);
+            Customer dbCust = ConvertToDB(customer);
             await _dbClient.CreateCustomerAsync(dbCust);
 
             // Convert saved db cust back to data transfer object to respond back
@@ -65,35 +83,49 @@ namespace CustManSvc.API.Controllers
             return CreatedAtAction(nameof(GetByID), new {custID = respCust.ID}, respCust);
         }
 
+        ///<summary>
+        ///  Updates existing customer
+        ///</summary>
+        /// <param name="custID">Customer ID to update, cannot be zero</param>
+        /// <param name="customer">Customer object to update. Customer.ID cannot be zero</param>
+        /// <response code="200">OK, update successful</response>
+        /// <response code="404">Not Found</response> 
+        /// <response code="400">Bad Request</response> 
         [HttpPut("{custID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Update(int custID, CustomerDTO reqCust)
+        public async Task<ActionResult> Update(int custID, CustomerDTO customer)
         {
-            if (custID == 0 || reqCust.ID == 0)
+            if (custID == 0 || customer.ID == 0)
             {
                 return BadRequest(new ServiceError($"Customer ID on query string and request body cannot be zero on update"));
             }
 
-            if (custID != reqCust.ID)
+            if (custID != customer.ID)
             {
                 return BadRequest(new ServiceError($"Customer ID on query string is different from request body"));
             }
 
-            Customer dbCust = ConvertToDB(reqCust);
+            Customer dbCust = ConvertToDB(customer);
             try {
                 await _dbClient.UpdateCustomerAsync(dbCust);
             }
             catch (RecordNotFoundException) {
-                return NotFound(new ServiceError($"Customer with id {reqCust.ID} not found"));
+                return NotFound(new ServiceError($"Customer with id {customer.ID} not found"));
             }
             
             return Ok();
         }
 
+        ///<summary>
+        ///  Deletes a customer
+        ///</summary>
+        /// <param name="custID">Customer ID to delete</param>
+        /// <response code="200">OK, delete successful</response>
+        /// <response code="404">Not Found</response> 
         [HttpDelete("{custID}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CustomerDTO>> Delete(int custID)
         {
@@ -109,9 +141,14 @@ namespace CustManSvc.API.Controllers
             return Ok(ConvertToDTO(cust));
         }
 
+        ///<summary>
+        ///  Substring search of customers' first and last names
+        ///</summary>
+        /// <param name="name">Name of the customer to search</param>
+        /// <response code="200">OK, search successful</response>
         [HttpGet]
         [Route("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<CustomerDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> SearchName(string name)
         {
             _logger.LogDebug($"Searching customer names containing {name}");

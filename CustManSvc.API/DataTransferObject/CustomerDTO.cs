@@ -8,6 +8,9 @@ namespace CustManSvc.API.DataTransferObject
     // Customer data transfer object, that is sent to or received from clients of the service
     public class CustomerDTO
     {
+        ///<summary>
+        /// Customer ID
+        ///</summary>
         [JsonPropertyName("id")]
         public int ID { get; set; }
         
@@ -19,6 +22,9 @@ namespace CustManSvc.API.DataTransferObject
         [Required]
         public string LastName { get; set; }
 
+        ///<summary>
+        /// Customer's Date of Birth in UTC in RFC3339 format: "2019-12-23T00:00:00Z"
+        ///</summary>
         [JsonPropertyName("dateOfBirth")]
         [Required]
         [DateFormatValidation(Constants.DateFormatRFC3339)]
