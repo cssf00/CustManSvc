@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CustManSvc.API\CustManSvc.API.csproj" />
+    <ProjectReference Include="..\..\src\CustManSvc.API\CustManSvc.API.csproj" />
   </ItemGroup>
 
 </Project>
