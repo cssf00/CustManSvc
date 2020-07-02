@@ -8,10 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using CustManSvc.API.Service.Database;
 
-namespace CustManSvc.API.Tests
+namespace CustManSvc.API.Tests.IntegrationTests
 {
-    // App factory for tests that test get all, get by id, search apis
-    public class AppFactoryForReadOnlyTests<TStartup>
+    public class AppFactoryForModifyTests<TStartup>
         : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -28,7 +27,7 @@ namespace CustManSvc.API.Tests
 
                 services.AddDbContext<DatabaseContext>(options =>
                 {
-                    options.UseInMemoryDatabase("TestReadOnlyDB");
+                    options.UseInMemoryDatabase("EmptyDB");
                 });
 
                 var sp = services.BuildServiceProvider();

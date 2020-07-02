@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using CustManSvc.API.Service.Database;
 
-namespace CustManSvc.API.Tests
+namespace CustManSvc.API.Tests.IntegrationTests
 {
     public static class TestHelper
     {

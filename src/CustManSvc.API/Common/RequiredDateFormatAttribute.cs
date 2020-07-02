@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CustManSvc.API.Common
 {
-    public class DateFormatValidationAttribute : ValidationAttribute
+    public class RequiredDateFormatAttribute : ValidationAttribute
     {
         private readonly string _dateFormat;
 
         // Allow setting of date format
-        public DateFormatValidationAttribute(string dateFormat)
+        public RequiredDateFormatAttribute(string dateFormat)
             : base()
         {
             _dateFormat = dateFormat;
@@ -23,7 +23,7 @@ namespace CustManSvc.API.Common
             }
 
             DateTime dateParsed;
-            if (DateTime.TryParseExact(value.ToString(), Constants.DateFormatRFC3339,
+            if (DateTime.TryParseExact(value.ToString(), _dateFormat,
                     DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out dateParsed))
             {
                 return ValidationResult.Success;

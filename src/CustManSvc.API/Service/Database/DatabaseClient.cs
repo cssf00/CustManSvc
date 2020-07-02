@@ -34,28 +34,33 @@ namespace CustManSvc.API.Service.Database
             return cust;
         }
 
-        public async Task UpdateCustomerAsync(Customer cust)
+        public async Task<bool> UpdateCustomerAsync(Customer cust)
         {
+            bool custFound = true;
             try {
                 _dbContext.Customers.Update(cust);
                 await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException) {
                 // Concurrency error occurs when the customer we are trying to update no longer exists in db
-                throw new RecordNotFoundException($"Customer record not found");
+                custFound = false;
             }
+
+            return custFound;
         }
 
-        public async Task<Customer> DeleteAsync(int custID)
+        // bool = custFound
+        public async Task<(bool, Customer)> DeleteAsync(int custID)
         {
             Customer cust = await _dbContext.Customers.FindAsync(custID);
             if (cust == null) {
-                throw new RecordNotFoundException($"Customer record not found");
+                return (false, null);
             }
 
             _dbContext.Customers.Remove(cust);
             await _dbContext.SaveChangesAsync();
-            return cust;
+
+            return (true, cust);
         }
 
         public async Task<IEnumerable<Customer>> SearchNameAsync(string searchString)

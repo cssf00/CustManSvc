@@ -13,11 +13,11 @@ namespace CustManSvc.API.Service.Database
 
         Task<Customer> GetCustomerByIDAsync(int custID);
 
-        // Throws RecordNotFoundException when customer does not exist
-        Task UpdateCustomerAsync(Customer cust);
+        // Returns false if customer does not exist
+        Task<bool> UpdateCustomerAsync(Customer cust);
 
-        // Throws RecordNotFoundException when customer does not exist
-        Task<Customer> DeleteAsync(int custID);
+        // Returns false if customer does not exist, returns a Customer deleted
+        Task<(bool, Customer)> DeleteAsync(int custID);
 
         // Search substring match of first or last name
         Task<IEnumerable<Customer>> SearchNameAsync(string searchString);

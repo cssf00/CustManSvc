@@ -7,7 +7,7 @@ using System.Text.Json;
 using Xunit;
 using CustManSvc.API.DataTransferObject;
 
-namespace CustManSvc.API.Tests
+namespace CustManSvc.API.Tests.IntegrationTests
 {
     public class CustomerControllerReadOnlyTests : IClassFixture<AppFactoryForReadOnlyTests<CustManSvc.API.Startup>>
     {

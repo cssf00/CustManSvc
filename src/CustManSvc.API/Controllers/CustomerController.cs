@@ -9,11 +9,13 @@ using Microsoft.Extensions.Logging;
 using CustManSvc.API.Common;
 using CustManSvc.API.DataTransferObject;
 using CustManSvc.API.Service.Database;
+using CustManSvc.API.Filters;
 
 namespace CustManSvc.API.Controllers
 {
     [ApiController]
     [Route("api/customers")]
+    [ServiceException]
     public class CustomerController : ControllerBase
     {
         private readonly ILogger<CustomerController> _logger;
@@ -45,7 +47,7 @@ namespace CustManSvc.API.Controllers
         /// <param name="custID">Customer ID</param>
         /// <response code="200">OK, customer found</response>
         /// <response code="404">Not Found</response> 
-        [HttpGet("{custID}")]
+        [HttpGet("{custID:int:min(1)}")]
         [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CustomerDTO>> GetByID(int custID)
@@ -91,7 +93,7 @@ namespace CustManSvc.API.Controllers
         /// <response code="200">OK, update successful</response>
         /// <response code="404">Not Found</response> 
         /// <response code="400">Bad Request</response> 
-        [HttpPut("{custID}")]
+        [HttpPut("{custID:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,10 +110,10 @@ namespace CustManSvc.API.Controllers
             }
 
             Customer dbCust = ConvertToDB(customer);
-            try {
-                await _dbClient.UpdateCustomerAsync(dbCust);
-            }
-            catch (RecordNotFoundException) {
+
+            bool custFound = await _dbClient.UpdateCustomerAsync(dbCust);
+            if (!custFound)
+            {
                 return NotFound(new ServiceError($"Customer with id {customer.ID} not found"));
             }
             
@@ -124,21 +126,19 @@ namespace CustManSvc.API.Controllers
         /// <param name="custID">Customer ID to delete</param>
         /// <response code="200">OK, delete successful</response>
         /// <response code="404">Not Found</response> 
-        [HttpDelete("{custID}")]
+        [HttpDelete("{custID:int:min(1)}")]
         [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CustomerDTO>> Delete(int custID)
+        public async Task<IActionResult> Delete(int custID)
         {
-            Customer cust;
-            try {
-                cust = await _dbClient.DeleteAsync(custID);
-            }
-            catch (RecordNotFoundException) {
+            (bool custFound, Customer cust) temp = await _dbClient.DeleteAsync(custID);
+            if (!temp.custFound)
+            {
                 return NotFound(new ServiceError($"Customer with id {custID} not found"));
             }
 
             // Convert db customer to dto before returning
-            return Ok(ConvertToDTO(cust));
+            return Ok(ConvertToDTO(temp.cust));
         }
 
         ///<summary>

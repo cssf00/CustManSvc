@@ -27,7 +27,7 @@ namespace CustManSvc.API.DataTransferObject
         ///</summary>
         [JsonPropertyName("dateOfBirth")]
         [Required]
-        [DateFormatValidation(Constants.DateFormatRFC3339)]
+        [RequiredDateFormat(Constants.DateFormatRFC3339)]
         public string DateOfBirth { get; set; }
     }
 }
