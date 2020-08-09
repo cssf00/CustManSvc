@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using CustManSvc.API.Service.Database;
 using NSwag.AspNetCore;
+using AutoMapper;
 
 namespace CustManSvc.API
 {
@@ -29,6 +30,9 @@ namespace CustManSvc.API
             services.AddLogging(builder => builder.AddConsole());
             services.AddDbContext<DatabaseContext>(opts => opts.UseInMemoryDatabase("CustomerDB"));
             services.AddScoped<IDatabaseClient, DatabaseClient>();
+            
+            var mapperConfig = new MapperConfiguration(c => c.AddProfile(new ObjectMappingProfile()));
+            services.AddSingleton<IMapper>(sp => mapperConfig.CreateMapper());
 
             // Swagger documentation
             services.AddSwaggerDocument(config => {

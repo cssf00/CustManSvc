@@ -10,6 +10,7 @@ using CustManSvc.API.Common;
 using CustManSvc.API.DataTransferObject;
 using CustManSvc.API.Service.Database;
 using CustManSvc.API.Filters;
+using AutoMapper;
 
 namespace CustManSvc.API.Controllers
 {
@@ -20,12 +21,14 @@ namespace CustManSvc.API.Controllers
     {
         private readonly ILogger<CustomerController> _logger;
         private readonly IDatabaseClient _dbClient;
+        private readonly IMapper _objMapper;
 
         public CustomerController(ILogger<CustomerController> logger, 
-                IDatabaseClient custDBClient)
+                IDatabaseClient custDBClient, IMapper objMapper)
         {
             _logger = logger;
             _dbClient = custDBClient;
+            _objMapper = objMapper;
         }
 
         ///<summary>
@@ -37,7 +40,7 @@ namespace CustManSvc.API.Controllers
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetAll()
         {
             var dbCusts = await _dbClient.GetAllCustomersAsync();
-            var dtoCusts = dbCusts.Select(c => ConvertToDTO(c)).ToList();
+            var dtoCusts = dbCusts.Select(c => _objMapper.Map<CustomerDTO>(c)).ToList();
             return dtoCusts;
         }
 
@@ -58,7 +61,7 @@ namespace CustManSvc.API.Controllers
                 return NotFound(new ServiceError($"Customer with id {custID} not found"));
             }
 
-            return ConvertToDTO(dbCust);
+            return _objMapper.Map<CustomerDTO>(dbCust);
         }
 
         ///<summary>
@@ -77,11 +80,11 @@ namespace CustManSvc.API.Controllers
                 return BadRequest(new ServiceError($"Customer ID must be zero on create: {customer.ID}"));
             }
 
-            Customer dbCust = ConvertToDB(customer);
+            Customer dbCust = _objMapper.Map<Customer>(customer);
             await _dbClient.CreateCustomerAsync(dbCust);
 
             // Convert saved db cust back to data transfer object to respond back
-            CustomerDTO respCust = ConvertToDTO(dbCust);
+            CustomerDTO respCust = _objMapper.Map<CustomerDTO>(dbCust);
             return CreatedAtAction(nameof(GetByID), new {custID = respCust.ID}, respCust);
         }
 
@@ -109,7 +112,7 @@ namespace CustManSvc.API.Controllers
                 return BadRequest(new ServiceError($"Customer ID on query string is different from request body"));
             }
 
-            Customer dbCust = ConvertToDB(customer);
+            Customer dbCust = _objMapper.Map<Customer>(customer);
 
             bool custFound = await _dbClient.UpdateCustomerAsync(dbCust);
             if (!custFound)
@@ -138,7 +141,7 @@ namespace CustManSvc.API.Controllers
             }
 
             // Convert db customer to dto before returning
-            return Ok(ConvertToDTO(temp.cust));
+            return Ok(_objMapper.Map<CustomerDTO>(temp.cust));
         }
 
         ///<summary>
@@ -153,7 +156,7 @@ namespace CustManSvc.API.Controllers
         {
             _logger.LogDebug($"Searching customer names containing {name}");
             var dbCusts = await _dbClient.SearchNameAsync(name);
-            return dbCusts.Select(c => ConvertToDTO(c)).ToList();
+            return dbCusts.Select(c => _objMapper.Map<CustomerDTO>(c)).ToList();
         }
 
         // Convert Customer db object to DTO
