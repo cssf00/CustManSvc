@@ -35,7 +35,13 @@ Response body:
     "dateOfBirth": "2000-02-02T00:00:00Z"
 }
 ```
+## CosmoDB Implementation
+PS C:\WINDOWS\system32> $Env:CustDB__PrimaryKey='C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=='
+PS C:\WINDOWS\system32> Get-Content Env:\CustDB__PrimaryKey
+C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+PS C:\WINDOWS\system32>
 
 # CustManSvc.API.Tests
 Contains integration tests to test all endpoints of CustManSvc.API
 - using TestServer and InMemory database
+

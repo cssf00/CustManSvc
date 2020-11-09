@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CustManSvc.API.Service.Database
+namespace CustManSvc.API.Service
 {
     // Interface to consumer needing access to database capabilities
     public interface IDatabaseClient

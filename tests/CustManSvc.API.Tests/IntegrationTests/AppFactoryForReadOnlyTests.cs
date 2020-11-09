@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using CustManSvc.API.Service.Database;
+using CustManSvc.API.Service.Database.InMemoryDB;
 
 namespace CustManSvc.API.Tests.IntegrationTests
 {

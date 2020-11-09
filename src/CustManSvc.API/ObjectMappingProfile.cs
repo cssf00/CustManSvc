@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using AutoMapper;
-using CustManSvc.API.Service.Database;
+using CustManSvc.API.Service;
 using CustManSvc.API.DataTransferObject;
 using CustManSvc.API.Common;
 

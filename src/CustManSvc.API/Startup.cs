@@ -7,8 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
-using CustManSvc.API.Service.Database;
+using CustManSvc.API.Service;
+using CustManSvc.API.Service.CosmosDB;
 using NSwag.AspNetCore;
 using AutoMapper;
 
@@ -28,8 +30,15 @@ namespace CustManSvc.API
         {
             services.AddControllers();
             services.AddLogging(builder => builder.AddConsole());
-            services.AddDbContext<DatabaseContext>(opts => opts.UseInMemoryDatabase("CustomerDB"));
-            services.AddScoped<IDatabaseClient, DatabaseClient>();
+            services.AddSingleton<CosmosClient>(p => 
+                new CosmosClient(
+                    accountEndpoint: Configuration["CustDB:URI"],
+                    authKeyOrResourceToken: Configuration["CustDB:PrimaryKey"]
+                )
+            );
+            services.AddScoped<IDatabaseClient, CosmosDBClient>();
+            //services.AddDbContext<DatabaseContext>(opts => opts.UseInMemoryDatabase("CustomerDB"));
+            //services.AddScoped<IDatabaseClient, InMemoryDBClient>();
             
             var mapperConfig = new MapperConfiguration(c => c.AddProfile(new ObjectMappingProfile()));
             services.AddSingleton<IMapper>(sp => mapperConfig.CreateMapper());

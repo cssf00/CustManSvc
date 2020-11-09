@@ -12,7 +12,7 @@ namespace CustManSvc.API.DataTransferObject
         /// Customer ID
         ///</summary>
         [JsonPropertyName("id")]
-        public int ID { get; set; }
+        public string ID { get; set; }
         
         [JsonPropertyName("firstName")]
         [Required]

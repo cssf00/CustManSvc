@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CustManSvc.API.Service.Database;
+using CustManSvc.API.Service.Database.InMemoryDB;
 
 namespace CustManSvc.API.Tests.IntegrationTests
 {

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using CustManSvc.API.Service;
 
-namespace CustManSvc.API.Service.Database
+namespace CustManSvc.API.Service.InMemoryDB
 {
     // Provide database capabilities, implements IDatabaseClient
-    public class DatabaseClient : IDatabaseClient
+    public class InMemoryDBClient : IDatabaseClient
     {
         private DatabaseContext _dbContext;
 
-        public DatabaseClient(DatabaseContext dbContext)
+        public InMemoryDBClient(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }
