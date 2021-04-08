@@ -1,5 +1,3 @@
-# testing 1 2 3
-# heelo
 # Prerequisite
 install .NET Core 3.1
 
