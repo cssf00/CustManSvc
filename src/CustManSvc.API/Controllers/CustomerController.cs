@@ -51,10 +51,10 @@ namespace CustManSvc.API.Controllers
         /// <param name="custID">Customer ID</param>
         /// <response code="200">OK, customer found</response>
         /// <response code="404">Not Found</response> 
-        [HttpGet("{custID:int:min(1)}")]
+        [HttpGet("{custID:minlength(1)}")]
         [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CustomerDTO>> GetByID(int custID)
+        public async Task<ActionResult<CustomerDTO>> GetByID(string custID)
         {
             Customer dbCust = await _dbClient.GetCustomerByIDAsync(custID);
             if (dbCust == null) 
@@ -86,6 +86,7 @@ namespace CustManSvc.API.Controllers
 
             // Convert saved db cust back to data transfer object to respond back
             CustomerDTO respCust = _objMapper.Map<CustomerDTO>(dbCust);
+
             return CreatedAtAction(nameof(GetByID), new {custID = respCust.ID}, respCust);
         }
 
@@ -130,19 +131,19 @@ namespace CustManSvc.API.Controllers
         /// <param name="custID">Customer ID to delete</param>
         /// <response code="200">OK, delete successful</response>
         /// <response code="404">Not Found</response> 
-        [HttpDelete("{custID:int:min(1)}")]
-        [ProducesResponseType(typeof(CustomerDTO), StatusCodes.Status200OK)]
+        [HttpDelete("{custID}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int custID)
+        public async Task<IActionResult> Delete(string custID)
         {
-            (bool custFound, Customer cust) temp = await _dbClient.DeleteAsync(custID);
-            if (!temp.custFound)
+            bool custFound = await _dbClient.DeleteAsync(custID);
+            if (!custFound)
             {
                 return NotFound(new ServiceError($"Customer with id {custID} not found"));
             }
 
             // Convert db customer to dto before returning
-            return Ok(_objMapper.Map<CustomerDTO>(temp.cust));
+            return Ok();
         }
 
         ///<summary>

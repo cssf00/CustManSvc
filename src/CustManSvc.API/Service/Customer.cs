@@ -9,7 +9,7 @@ namespace CustManSvc.API.Service
     public class Customer
     {
         // [Key]
-        public string ID { get; set; }
+        public string Id { get; set; }
         
         // [JsonProperty(PropertyName = "firstName")]
         // [Required]

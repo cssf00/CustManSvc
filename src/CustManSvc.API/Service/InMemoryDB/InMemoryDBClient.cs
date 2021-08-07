@@ -29,7 +29,7 @@ namespace CustManSvc.API.Service.InMemoryDB
             return custs;
         }
 
-        public async Task<Customer> GetCustomerByIDAsync(int custID)
+        public async Task<Customer> GetCustomerByIDAsync(string custID)
         {
             Customer cust = await _dbContext.Customers.FindAsync(custID);
             return cust;
@@ -51,20 +51,20 @@ namespace CustManSvc.API.Service.InMemoryDB
         }
 
         // bool = custFound
-        public async Task<(bool, Customer)> DeleteAsync(int custID)
+        public async Task<bool> DeleteAsync(string custID)
         {
             Customer cust = await _dbContext.Customers.FindAsync(custID);
             if (cust == null) {
-                return (false, null);
+                return false;
             }
 
             _dbContext.Customers.Remove(cust);
             await _dbContext.SaveChangesAsync();
 
-            return (true, cust);
+            return true;
         }
 
-        public async Task<IEnumerable<Customer>> SearchNameAsync(string searchString)
+        public async Task<IList<Customer>> SearchNameAsync(string searchString)
         {
             List<Customer> custs = await _dbContext.Customers
                 .Where(c => (EF.Functions.Like(c.FirstName, $"%{searchString}%") 
