@@ -1,6 +1,16 @@
+PS C:\users\FOO0C0\Source\Repos\CustManSvc\src\CustManSvc.API\pub> cd .\CustManSvc.API\
+PS C:\users\FOO0C0\Source\Repos\CustManSvc\src\CustManSvc.API\pub> dotnet publish -o pub
+PS C:\users\FOO0C0\Source\Repos\CustManSvc\src\CustManSvc.API\pub> Compress-Archive -Path * -DestinationPath CustManSvc.zip
+az login
+az account show --output table
+PS C:\users\FOO0C0\Source\Repos\CustManSvc\src\CustManSvc.API\pub> az webapp config appsettings set --resource-group <group-name> --name <app-name> --settings 
+WEBSITE_RUN_FROM_PACKAGE="1"
+PS C:\users\FOO0C0\Source\Repos\CustManSvc\src\CustManSvc.API\pub> az webapp deployment source config-zip --src CustManSvc.zip --resource-group CustManSvc --name custmansvc
 # TESTING
 # Prerequisite
 install .NET Core 3.1
+
+
 
 # CustManSvc.API
 ASP.NET Core 3.1 WebAPI service to manage/CRUD customer details
