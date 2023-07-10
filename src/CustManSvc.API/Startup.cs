@@ -29,6 +29,17 @@ namespace CustManSvc.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowCors", builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000", "https://localhost:3001")
+                            .AllowCredentials()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
+
             services.AddLogging(builder => builder.AddConsole());
             services.AddSingleton<CosmosClient>(p => 
                 new CosmosClient(
@@ -70,11 +81,13 @@ namespace CustManSvc.API
 
             app.UseRouting();
 
+            app.UseCors();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireCors("AllowCors");
             });
         }
     }

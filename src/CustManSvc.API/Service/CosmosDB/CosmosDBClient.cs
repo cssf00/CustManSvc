@@ -119,7 +119,7 @@ namespace CustManSvc.API.Service.CosmosDB
             var result = new List<Customer>();
 
             using FeedIterator<Customer> custsIterator = _container.GetItemQueryIterator<Customer>(
-                new QueryDefinition("select * from c where c.firstName = @searchString or c.lastName = @searchString").WithParameter("@searchString", searchString)
+                new QueryDefinition("select * from c where upper(c.firstName) = @searchString or upper(c.lastName) = @searchString").WithParameter("@searchString", searchString.ToUpperInvariant())
             );
 
             while (custsIterator.HasMoreResults)

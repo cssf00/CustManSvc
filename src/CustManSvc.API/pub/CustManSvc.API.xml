@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CustManSvc.API</name>
+    </assembly>
+    <members>
+        <member name="M:CustManSvc.API.Controllers.CustomerController.GetAll">
+            <summary>
+              Get all customers
+            </summary>
+             <response code="200">OK, success</response>
+        </member>
+        <member name="M:CustManSvc.API.Controllers.CustomerController.GetByID(System.String)">
+            <summary>
+              Get customers by ID
+            </summary>
+             <param name="custID">Customer ID</param>
+             <response code="200">OK, customer found</response>
+             <response code="404">Not Found</response> 
+        </member>
+        <member name="M:CustManSvc.API.Controllers.CustomerController.Create(CustManSvc.API.DataTransferObject.CustomerDTO)">
+            <summary>
+              Adds a new customer
+            </summary>
+             <param name="customer">Customer object to add</param>
+             <response code="201">OK, customer created</response>
+             <response code="400">Bad Request</response> 
+        </member>
+        <member name="M:CustManSvc.API.Controllers.CustomerController.Update(System.String,CustManSvc.API.DataTransferObject.CustomerDTO)">
+            <summary>
+              Updates existing customer
+            </summary>
+             <param name="custID">Customer ID to update, cannot be zero</param>
+             <param name="customer">Customer object to update. Customer.ID cannot be zero</param>
+             <response code="200">OK, update successful</response>
+             <response code="404">Not Found</response> 
+             <response code="400">Bad Request</response> 
+        </member>
+        <member name="M:CustManSvc.API.Controllers.CustomerController.Delete(System.String)">
+            <summary>
+              Deletes a customer
+            </summary>
+             <param name="custID">Customer ID to delete</param>
+             <response code="200">OK, delete successful</response>
+             <response code="404">Not Found</response> 
+        </member>
+        <member name="M:CustManSvc.API.Controllers.CustomerController.SearchName(System.String)">
+            <summary>
+              Substring search of customers' first and last names
+            </summary>
+             <param name="name">Name of the customer to search</param>
+             <response code="200">OK, search successful</response>
+        </member>
+        <member name="P:CustManSvc.API.DataTransferObject.CustomerDTO.ID">
+            <summary>
+             Customer ID
+            </summary>
+        </member>
+        <member name="P:CustManSvc.API.DataTransferObject.CustomerDTO.DateOfBirth">
+            <summary>
+             Customer's Date of Birth in UTC in RFC3339 format: "2019-12-23T00:00:00Z"
+            </summary>
+        </member>
+    </members>
+</doc>

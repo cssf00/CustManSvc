@@ -154,7 +154,7 @@ namespace CustManSvc.API.Controllers
         [HttpGet]
         [Route("search")]
         [ProducesResponseType(typeof(IEnumerable<CustomerDTO>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<CustomerDTO>>> SearchName(string name)
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> SearchName([FromQuery]string name)
         {
             _logger.LogDebug($"Searching customer names containing {name}");
             var dbCusts = await _dbClient.SearchNameAsync(name);

@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/CustManSvc.API/bin/Debug/netcoreapp3.1/CustManSvc.API.dll",
+            "program": "${workspaceFolder}/src/CustManSvc.API/bin/Debug/net5.0/CustManSvc.API.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/CustManSvc.API",
             "stopAtEntry": false,
